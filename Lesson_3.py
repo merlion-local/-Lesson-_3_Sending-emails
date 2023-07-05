@@ -2,23 +2,24 @@ import smtplib
 import os
 
 
+SENDER = os.environ['SENDER']
+RECIPIENT = os.environ['RECIPIENT']
 friend_name = "Иван"
-website = "https://dvmn.org/referrals/ZrywWY269gDOBwt07LUO3z6R0RFWKe7vzGuzS3Rf/"
 my_name = "Алексей"
+website="https://dvmn.org/referrals/ZrywWY269gDOBwt07LUO3z6R0RFWKe7vzGuzS3Rf/"
 
 letter = '''
-From:ssdd7772006@mail.ru
-To:smockotnin@yandex.ru
-Subject: python
+From: {0}
+To: {1}
 Content-Type: text/plain; charset="UTF-8";
+\nSubject: Курсы Python
 
+Привет, {2}! {3} приглашает тебя на сайт {4}!
 
-Привет, {1}! {3} приглашает тебя на сайт {2}!
-
-{2} — это новая версия онлайн-курса по программированию. 
+{4} — это новая версия онлайн-курса по программированию. 
 Изучаем Python и не только. Решаем задачи. Получаем ревью от преподавателя. 
 
-Как будет проходить ваше обучение на {2}? 
+Как будет проходить ваше обучение на {4}? 
 
 → Попрактикуешься на реальных кейсах. 
 Задачи от тимлидов со стажем от 10 лет в программировании.
@@ -27,13 +28,17 @@ Content-Type: text/plain; charset="UTF-8";
 → Подготовишь крепкое резюме.
 Все проекты — они же решение наших задачек — можно разместить на твоём GitHub. Работодатели такое оценят. 
 
-Регистрируйся → {2}  
+Регистрируйся → {4}  
 На курсы, которые еще не вышли, можно подписаться и получить уведомление о релизе сразу на имейл.'''
 
-formatted_letter = letter.format(friend_name, my_name, website, website, website)
+formatted_letter = letter.replace('\nSubject:', ' Subject:').replace('\nContent-Type:', ' Content-Type:').format(SENDER,RECIPIENT,friend_name, my_name, website)
 server = smtplib.SMTP_SSL('smtp.mail.ru:465')
 login = os.environ['SMTP_LOGIN']
 password = os.environ['SMTP_PASSWORD']
 server.login(login, password)
-server.sendmail('ssdd7772006@mail.ru', 'smockotnin@yandex.ru', formatted_letter.encode("UTF-8"))
+server.sendmail(SENDER,RECIPIENT,formatted_letter.encode("UTF-8"))
 server.quit()
+
+
+
+
